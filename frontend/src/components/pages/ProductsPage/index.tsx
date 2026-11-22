@@ -1,7 +1,6 @@
-import { useState } from "react"
+import { useState, type Dispatch, type SetStateAction } from "react"
 import { TbPlus, TbSearch } from "react-icons/tb"
 import type { Product, ProductValues } from "../../../types/product"
-import { initialProducts } from "../../../data/product/initialProducts"
 import ProductRemote from "../../../data/product/source/product-remote.ts"
 import ProductRepository from "../../../data/product/repository/product-repository.ts"
 import Button from "../../atoms/Button"
@@ -14,8 +13,17 @@ const repository = ProductRepository(
     ProductRemote({ baseUrl: import.meta.env.VITE_API_BASE_URL ?? "" }),
 )
 
-export default function ProductsPage() {
-    const [products, setProducts] = useState<Product[]>(initialProducts)
+type ProductsPageProps = {
+    products: Product[]
+    onChangeProducts: Dispatch<SetStateAction<Product[]>>
+    viewMode?: "grid" | "list"
+}
+
+export default function ProductsPage({
+    products,
+    onChangeProducts,
+    viewMode = "grid",
+}: ProductsPageProps) {
     const [searchQuery, setSearchQuery] = useState("")
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingProduct, setEditingProduct] = useState<Product | null>(null)
@@ -48,7 +56,7 @@ export default function ProductsPage() {
 
     function handleSaveProduct(values: ProductValues) {
         if (editingProduct) {
-            setProducts((prev) =>
+            onChangeProducts((prev) =>
                 prev.map((item) =>
                     item.id === editingProduct.id
                         ? { ...item, ...values }
@@ -57,11 +65,13 @@ export default function ProductsPage() {
             )
             setMessage(`Produk "${values.name}" berhasil diperbarui.`)
         } else {
-            const nextId =
-                products.length > 0
-                    ? Math.max(...products.map((item) => item.id)) + 1
-                    : 1
-            setProducts((prev) => [...prev, { id: nextId, ...values }])
+            onChangeProducts((prev) => {
+                const nextId =
+                    prev.length > 0
+                        ? Math.max(...prev.map((item) => item.id)) + 1
+                        : 1
+                return [...prev, { id: nextId, ...values }]
+            })
             setMessage(`Produk "${values.name}" berhasil ditambahkan.`)
         }
         setError("")
@@ -70,7 +80,7 @@ export default function ProductsPage() {
 
     function handleConfirmDelete(id: number) {
         const target = products.find((item) => item.id === id)
-        setProducts((prev) => prev.filter((item) => item.id !== id))
+        onChangeProducts((prev) => prev.filter((item) => item.id !== id))
         setDeletingProduct(null)
         setError("")
         if (target) {
@@ -84,7 +94,7 @@ export default function ProductsPage() {
         setMessage("Memuat produk…")
         try {
             const models = await repository.getProductList()
-            setProducts(models.map((model) => model.toJSON()))
+            onChangeProducts(models.map((model) => model.toJSON()))
             setMessage(`${models.length} produk berhasil dimuat dari API.`)
         } catch (err) {
             setError(
@@ -164,6 +174,7 @@ export default function ProductsPage() {
                 ) : (
                     <ProductGrid
                         products={filteredProducts}
+                        viewMode={viewMode}
                         onEdit={openEditModal}
                         onDelete={setDeletingProduct}
                     />
