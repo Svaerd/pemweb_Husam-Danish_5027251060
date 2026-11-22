@@ -1,0 +1,7 @@
+@reference "../../../../app/globals.css";
+
+@layer components {
+    .button {
+        @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-wait disabled:opacity-60;
+    }
+}

@@ -1,0 +1,19 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Local environment variables
+.env
+.env.*
+!.env.example
+
+# Test artifacts
+playwright-report/
+playwright/.cache/
+test-results/
+
+# Local and temporary files
+.DS_Store
+*.log
+*.local

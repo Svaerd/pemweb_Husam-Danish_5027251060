@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@import "../src/styles/themes.style.css";
+@import "../src/styles/utilities.style.css";
+@import "../src/styles/buttons.style.css";
