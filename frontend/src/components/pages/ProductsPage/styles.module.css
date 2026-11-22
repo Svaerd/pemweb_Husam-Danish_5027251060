@@ -1,0 +1,27 @@
+@reference "../../../../app/globals.css";
+
+.header {
+    @apply mb-8;
+}
+.eyebrow {
+    @apply mb-3 text-sm font-semibold text-blue-600;
+}
+.title {
+    @apply text-3xl font-bold tracking-tight text-slate-900;
+}
+.description {
+    @apply mt-3 max-w-2xl text-sm leading-6 text-slate-500;
+}
+.notice {
+    @apply mt-6 text-sm leading-6 text-slate-600;
+}
+
+.toolbar {
+    @apply mb-6 flex flex-wrap items-center gap-4;
+}
+.hint {
+    @apply max-w-xl text-sm leading-6 text-slate-500;
+}
+.error {
+    @apply mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700;
+}
